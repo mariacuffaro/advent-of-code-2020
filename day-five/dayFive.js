@@ -3,50 +3,39 @@ var fs = require('fs');
 var input = fs.readFileSync("./input.txt", 'utf8');
 //create an array of rows
 var boardingPasses = input.split(/\r?\n/);
-var seatIDs = [];
+
+
+const binarySplit = (input,maxRange,lowerHalfLetter) => {
+    let minRange = 0
+    let range = maxRange-minRange
+    
+    let i
+    for (i = 0; i < input.length; i++) {
+       if (input[i] === lowerHalfLetter){
+            maxRange = Math.floor(maxRange-range/2)
+        }else{
+            minRange = Math.floor(maxRange-range/2)+1
+        }
+        range = maxRange-minRange
+    }
+    return minRange
+};
 
 const findRow = (boardingPass) => {
-
-    let passDigits = boardingPass.split('');
-    let minRange = 0
-    let maxRange = 127
-    let range = maxRange-minRange
-
-    passDigits[0] === 'F' ? maxRange = Math.floor(maxRange/2) : minRange = Math.floor(maxRange/2)+1
-    range = maxRange-minRange
-
-    let i
-    for (i = 1; i < 7; i++) {
-       if (passDigits[i] === 'F'){
-            maxRange = Math.floor(maxRange-range/2)
-        }else{
-            minRange = Math.floor(maxRange-range/2)+1
-        }
-        range = maxRange-minRange
-    }
-    return minRange
-
+    let rowLetters = boardingPass.substr(0,7)
+    let rowDigits = rowLetters.split('');
+    return binarySplit(rowDigits,127,'F')
 };
+
 const findColumn = (boardingPass) => {
-    let passDigits = boardingPass.split('');
-    let minRange = 0
-    let maxRange = 7
-    let range = maxRange-minRange
-
-    passDigits[7] === 'L' ? maxRange = Math.floor(maxRange/2) : minRange = Math.floor(maxRange/2)+1
-    range = maxRange-minRange
-
-    let i
-    for (i = 8; i < 10; i++) {
-       if (passDigits[i] === 'L'){
-            maxRange = Math.floor(maxRange-range/2)
-        }else{
-            minRange = Math.floor(maxRange-range/2)+1
-        }
-        range = maxRange-minRange
-    }
-    return minRange
+    let columnLetters = boardingPass.substr(7,3)
+    let columnDigits = columnLetters.split('');
+    return binarySplit(columnDigits,7,'L')
 };
+
+//Part One
+var seatIDs = [];
+
 boardingPasses.forEach(boardingPass => {
     const row = findRow(boardingPass);
     const column = findColumn(boardingPass);
@@ -55,14 +44,14 @@ boardingPasses.forEach(boardingPass => {
 });
 console.log(Math.max(...seatIDs));
 
+//Part Two
 const sortedIDs = seatIDs.sort((a,b)=>(a-b));
-console.log(sortedIDs);
 let missing
 
-currentId = 84;
 for (i = 0; i < sortedIDs.length; i++) {
-    if (sortedIDs[i] !== i + 84){
+    if (sortedIDs[i] !== i + sortedIDs[0]){
         missing = sortedIDs[i]
-        break}
+        break
+    }
 };
-  console.log('missing', missing)
+console.log('missing', missing)
