@@ -85,37 +85,37 @@ const validatePassport = (passport) => {
     // byr (Birth Year) - four digits; at least 1920 and at most 2002.
     if (byr && validYear(byr, '1920', '2002')) {
         isValid = true
-    }else{isValid = false}
+    }else{return false}
 
     // iyr (Issue Year) - four digits; at least 2010 and at most 2020.
     if (isValid && iyr && validYear(iyr, '2010', '2020')){
         isValid = true
-    }else{isValid = false}
+    }else{return false}
 
     // eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
     if (isValid && eyr && validYear(eyr, '2020', '2030')){
         isValid = true
-    }else{isValid = false}
+    }else{return false}
 
     if (isValid && hgt && validHeight(hgt)){
         isValid = true
-    }else{isValid = false}
+    }else{return false}
 
     // hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
     if(isValid && hcl  && validHair(hcl)){
         isValid = true
-    }else{isValid = false}
+    }else{return false}
 
     // ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
     const validEyeColours = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
     if (isValid && ecl && validEyeColours.includes(ecl)){
         isValid = true
-    }else{isValid = false}
+    }else{return false}
 
     // pid (Passport ID) - a nine-digit number, including leading zeroes.
     if (isValid && pid && pid.length === 9 && pid.match("^[0-9]*$")){
         isValid = true
-    }else{isValid = false}
+    }else{return false}
 
     return isValid
  };
